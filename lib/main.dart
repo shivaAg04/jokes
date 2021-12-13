@@ -1,13 +1,11 @@
+// import  'dart:html';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:jokes/screens/jokes_category.dart';
-import 'package:page_transition/page_transition.dart';
 import './screens/jokes_category.dart';
 
 void main() {
@@ -19,17 +17,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'jokes ',
-        theme: ThemeData(
-          primarySwatch: Colors.yellow,
-        ),
-        home: AnimatedSplashScreen(
-            duration: 300,
-            splash: Icons.emoji_emotions,
-            nextScreen: JokesCategory(),
-            splashTransition: SplashTransition.fadeTransition,
-            backgroundColor: Colors.yellow));
+      debugShowCheckedModeBanner: false,
+      title: 'jokes ',
+      theme: ThemeData(
+        primarySwatch: Colors.yellow,
+      ),
+      home: AnimatedSplashScreen(
+          duration: 300,
+          splash: Icons.emoji_emotions,
+          nextScreen: JokesCategory(),
+          splashTransition: SplashTransition.fadeTransition,
+          backgroundColor: Colors.yellow),
+    );
   }
 }
 

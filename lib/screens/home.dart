@@ -21,15 +21,17 @@ class _HomeState extends State<Home> {
   _HomeState(this.categoryName);
 
   ApiService object = ApiService();
+  saved objsaved = saved();
 
   List MainList = [];
-  bool isSaved = false;
+
+  List<bool> isSaved = [];
 
   @override
   void initState() {
     super.initState();
 
-    object.getJokes(MainList, categoryName).then((value) {
+    object.getJokes(MainList, isSaved, categoryName).then((value) {
       setState(() {});
     });
   }
@@ -76,7 +78,9 @@ class _HomeState extends State<Home> {
                   )
                 : GestureDetector(
                     onVerticalDragUpdate: (dragUpdateDetails) {
-                      object.getJokes(MainList, categoryName).then((value) {
+                      object
+                          .getJokes(MainList, isSaved, categoryName)
+                          .then((value) {
                         setState(() {});
                       });
                     },
@@ -98,15 +102,36 @@ class _HomeState extends State<Home> {
                                 subtitle: Text(MainList[i]["category"],
                                     overflow: TextOverflow.visible),
                                 trailing: IconButton(
-                                  splashColor: Colors.black,
-                                  icon: SvgPicture.asset(
-                                    'assets/save.svg',
-                                    height: 24,
-                                    color: Colors.black54,
-                                  ),
-                                  onPressed: () =>
-                                      object.postJokes(MainList, i),
-                                ),
+                                    splashColor: Colors.black,
+                                    icon: SvgPicture.asset(
+                                      isSaved[i]
+                                          ? 'assets/saved_fill.svg'
+                                          : 'assets/save.svg',
+                                      height: 24,
+                                      color: Colors.black54,
+                                    ),
+                                    onPressed: isSaved[i]
+                                        ? () {
+                                            setState(() {
+                                              isSaved[i] = false;
+                                              object
+                                                  .deleteData(savedList[i].key);
+
+                                              // savedList.removeAt(i);
+                                            });
+                                          }
+                                        : () {
+                                            setState(() async {
+                                              isSaved[i] = true;
+                                              await object.postJokes(
+                                                  MainList, i);
+                                              object
+                                                  .savedJokes(savedList)
+                                                  .then((value) {
+                                                setState(() {});
+                                              });
+                                            });
+                                          }),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10.0, horizontal: 16.0),
                                 title: Text(MainList[i]["joke"]),
@@ -123,7 +148,9 @@ class _HomeState extends State<Home> {
             // ignore: deprecated_member_use
             RaisedButton.icon(
                 onPressed: () {
-                  object.getJokes(MainList, categoryName).then((value) {
+                  object
+                      .getJokes(MainList, isSaved, categoryName)
+                      .then((value) {
                     setState(() {});
                   });
                 },

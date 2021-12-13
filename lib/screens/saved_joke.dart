@@ -6,10 +6,10 @@ class saved extends StatefulWidget {
   _savedState createState() => _savedState();
 }
 
+List<jokeStructure> savedList = [];
+
 class _savedState extends State<saved> {
   ApiService object = ApiService();
-
-  List<jokeStructure> savedList = [];
 
   @override
   void initState() {

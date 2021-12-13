@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,12 @@ class ApiService {
   final firebasUrl = "https://jokes-66b4d-default-rtdb.firebaseio.com/.json";
   final lastUrl = "?type=single&amount=10";
 
-  Future<void> getJokes(List list, String catName) async {
+  Future<void> getJokes(List list, List<bool> boolList, String catName) async {
     try {
       var response = await get(Uri.parse(jokesUrl + catName + lastUrl));
 
       list.addAll(jsonDecode(response.body)["jokes"]);
+      boolList.addAll(List.filled(10, false));
     } catch (e) {
       print('no jokes');
       // return mainList;
@@ -41,7 +43,8 @@ class ApiService {
         body: json.encode({
           'joke': list[i]['joke'],
           'category': list[i]['category'],
-          'id': list[i]['id']
+          'id': list[i]['id'],
+          'save': false,
         }),
       );
       print(response.body);
@@ -68,10 +71,14 @@ class ApiService {
     }
   }
 
-  void deleteData(String key) {
+  Future deleteData(String key) async {
     // final url = "https://jokes-66b4d-default-rtdb.firebaseio.com/$key.json";
     final url = firebs.firebasUrl + key + ".json";
     // final firebasUrl = "https://jokes-66b4d-default-rtdb.firebaseio.com/.json";
-    delete(Uri.parse(url));
+    try {
+      final res = await delete(Uri.parse(url));
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
